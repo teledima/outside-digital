@@ -1,0 +1,35 @@
+{
+  "name": "outside-digital-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=dev nodemon app.js",
+    "test": "cross-env NODE_ENV=test mocha --reporter dot --exit --inline-diffs --slow 0 --node-option no-deprecation"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie": "^0.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "pg": "^8.7.3",
+    "swagger-jsdoc": "^6.2.3",
+    "swagger-ui-express": "^4.5.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "chai-sorted": "^0.2.0",
+    "cross-env": "^7.0.3",
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.19",
+    "uuid": "^8.3.2"
+  }
+}
