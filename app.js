@@ -51,7 +51,7 @@ app.use(passport.initialize())
 app.use(cors({origin: '*'}))
 app.use(express.json())
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV === 'dev') {
     app.use(morgan('dev'))
 }
 
@@ -59,8 +59,8 @@ app.get('/swagger.json', (_req, res) => res.json(apiSpec));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(null, { swaggerOptions: { url: '/swagger.json' } }))
 app.use('/', routes)
 
-app.listen(8080, 'localhost', () => {
-    console.log('listen to http://localhost:8080')
+app.listen(8080, '0.0.0.0', () => {
+    console.log('listen to http://0.0.0.0:8080')
 })
 
 module.exports = app

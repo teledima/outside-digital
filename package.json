@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=dev nodemon app.js",
+    "prod": "cross-env NODE_ENV=prod node app.js",
     "test": "cross-env NODE_ENV=test mocha --reporter dot --exit --inline-diffs --slow 0 --node-option no-deprecation"
   },
   "author": "",

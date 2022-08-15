@@ -2,20 +2,14 @@ const { Pool } = require('pg')
 
 class Tag {
     constructor() {
-        this.pool = new Pool({
-            host: 'localhost',
-            user: 'postgres',
-            password: 'postgres',
-            database: 'postgres'
-        })
+        this.pool = new Pool()
     }
 
     async getTag (id) {
-        const client = await this.pool.connect()
-    
-        let tag = null;
-    
+        let client; 
+
         try {
+            client = await this.pool.connect()
             const res = (await client.query(
                 `select t1.name, t1.sort_order as "sortOrder", t2.uid, t2.nickname
                    from tags t1
@@ -23,7 +17,8 @@ class Tag {
                   where t1.id = $1`,
                 [id]
             )).rows[0]
-            tag = {
+            
+            return {
                 creator: {
                     uid: res.uid,
                     nickname: res.nickname
@@ -31,29 +26,31 @@ class Tag {
                 name: res.name,
                 sortOrder: res.sortOrder
             }
-        } catch { }
-    
-        client.release()
-        return tag
+        } catch { 
+            return null
+        } finally {
+            client?.release()
+        }
     }
 
     async getAllTags({sortByOrder=false, sortByName=false, offset=0, length=10}) {
-        const client = await this.pool.connect()
         offset = Number(offset)
         length = Number(length)
     
-        let tags = []
-        let quantity = 0
+        let client,
+            tags = [],
+            sortClause = [],
+            quantity = 0;
+
+        if (sortByOrder) {
+            sortClause.push('t1.sort_order')
+        }
+        if (sortByName) {
+            sortClause.push('t1.name')
+        }
     
         try {
-            let sortClause = []
-            if (sortByOrder) {
-                sortClause.push('t1.sort_order')
-            }
-            if (sortByName) {
-                sortClause.push('t1.name')
-            }
-            
+            client = await this.pool.connect()
             const res = await client.query(
                 `select t1.name, t1.sort_order as "sortOrder", t2.uid, t2.nickname
                    from tags t1
@@ -67,8 +64,8 @@ class Tag {
             const countRes = await client.query('select count(1) as cnt from tags')
     
             quantity = Number(countRes.rows[0].cnt)
-            tags = res.rows.map(item => { 
-                return {
+            tags = res.rows.map(item => (
+                {
                     creator: {
                         uid: item.uid,
                         nickname: item.nickname
@@ -76,12 +73,15 @@ class Tag {
                     name: item.name,
                     sortOrder: item.sortOrder
                 }
-            })
+            ))
 
             length = res.rowCount
-        } catch(e) { }
-    
-        client.release()
+        } catch { 
+
+        } finally {
+            client?.release()
+        }
+
         return {
             data: tags,
             meta: { offset: offset, length, quantity }
@@ -89,29 +89,24 @@ class Tag {
     }
 
     async addTag(tagBody, creatorUid) {
-        const client = await this.pool.connect()
-    
-        let tag = null;
+        let client;
     
         try {
+            client = await this.pool.connect()
             const res = await client.query(
                 'insert into tags(name, sort_order, creator) values ($1, $2, $3) returning id, name, sort_order as "sortOrder"', 
                 [tagBody.name, tagBody.sortOrder, creatorUid]
             )
-            tag = { tag: res.rows[0], error: null }
+            return { tag: res.rows[0], error: null }
         } catch(e) {
-            tag = { tag: null, error: e.code }
+            return { tag: null, error: e.code }
+        } finally {
+            client?.release()
         }
-    
-        client.release()
-        return tag
     }
     
     async updateTag (id, name, sortOrder, uid) {
-        const client = await this.pool.connect()
-    
-        let tag = null
-        let setClause = []
+        let client, tag, setClause = [];
     
         if (name) {
             setClause.push([` name = \$${setClause.length + 1} `, name])
@@ -122,6 +117,7 @@ class Tag {
     
         if (setClause.length > 0) {
             try {
+                client = await this.pool.connect()
                 const res = await client.query(
                     `update tags t1 
                         set ${setClause.map(item => item[0]).join(',')} 
@@ -150,6 +146,8 @@ class Tag {
                     tag: await this.getTag(id),
                     error: e.code
                 }
+            } finally {
+                client?.release()
             }
         }
     
@@ -157,25 +155,23 @@ class Tag {
     }
     
     async deleteTag (id, uid) {
-        const client = await this.pool.connect()
-    
-        let res = null
+        let client;
     
         try {
+            client = await this.pool.connect()
             const deletRes = await client.query('delete from tags where id = $1 and creator = $2', [id, uid])
-            res = {
+            return {
                 count: deletRes.rowCount,
                 error: null
             }
         } catch(e) {
-            res = {
+            return {
                 count: 0,
                 error: e.code
             }
+        } finally {
+            client?.release()
         }
-    
-        client.release()
-        return res
     }
 }
 

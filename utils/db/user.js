@@ -1,56 +1,46 @@
 const { Pool } = require('pg')
-const { createHash } = require('crypto')
+const { createHash } = require('crypto');
+const { finished } = require('stream');
 
 class User {
     constructor() {
-        this.pool = new Pool({
-            host: 'localhost',
-            user: 'postgres',
-            password: 'postgres',
-            database: 'postgres'
-        })
+        this.pool = new Pool()
     }
 
     async getUser({uid, email, fields=['*']}) {
-        const client = await this.pool.connect()
-
-        let user = null;
+        let client;
     
         try {
+            client = await this.pool.connect()
             const whereClause = uid != null? [' uid = $1 ', uid] : [' email = $1 ', email] 
             const userSelectRes = await client.query(`select ${fields.join(',')} from users where ${whereClause[0]}`, [whereClause[1]])
-            user = userSelectRes !== null? userSelectRes.rows[0] : userSelectRes
+            return userSelectRes !== null? userSelectRes.rows[0] : userSelectRes
         } catch(e) {
-            user = null
+            return null
+        } finally {
+            client?.release()
         }
-        
-        client.release()
-        return user
     }
 
     async addUser(userBody) {
-        const client = await this.pool.connect()
-        
-        let user = null
+        let client;
     
         try {
+            const client = await this.pool.connect()
             const insertRes = await client.query(
                 'insert into users(email, password, nickname) values ($1, $2, $3) returning uid, email, nickname', 
                 [userBody.email, createHash('SHA256').update(userBody.password).digest('hex'), userBody.nickname]
             )
-            user = { user: insertRes.rows[0], error: null }
+            return { user: insertRes.rows[0], error: null }
         } catch(e) {
-            user = { user: null, error: e.code }
+            return { user: null, error: e.code }
+        } finally {
+            client?.release()
         }
-        
-        client.release()
-        return user
     }
 
     async updateUser(updateBody, uid) {
-        const client = await this.pool.connect()
-    
-        let setClause = [];
+        let client, setClause = [];
     
         if (updateBody.email) {
             setClause.push([` email = \$${setClause.length + 1} `, updateBody.email])
@@ -61,48 +51,46 @@ class User {
         if (updateBody.password) {
             setClause.push([` password = \$${setClause.length + 1} `, createHash('SHA256').update(userBody.password).digest('hex')])
         }
-        let updatedUser = null
     
         if (setClause.length > 0) {
             try {
+                client = await this.pool.connect()
                 const res = await client.query(
                     `update users set ${setClause.map(item => item[0]).join(',')} where uid = \$${setClause.length + 1} returning email, nickname`, 
                     [...setClause.map(item => item[1]), uid]
                 )
                 
-                updatedUser = {
+                return {
                     error: null,
                     user: res.rows[0]
                 }
             } catch(e) {
-                updatedUser = {
+                return {
                     error: e.code,
                     user: await this.getUser({uid: uid, fields: ['email', 'nickname']})
                 }
+            } finally {
+                client?.release()
             }
         } else {
-            updatedUser = {
+            return {
                 error: null,
                 user: await this.getUser({uid: uid, fields: ['email', 'nickname']})
             }
         }
-        
-    
-        client.release()
-        return updatedUser
     }
 
     async deleteUser(uid) {
-        const client = await this.pool.connect()
+        let client;
 
-        let deleted = false;
         try {
-            await client.query('delete from users where uid = $1', [uid])
-            deleted = true
-        } catch { }
-    
-        client.release()
-        return deleted
+            client = await this.pool.connect()
+            return (await client.query('delete from users where uid = $1', [uid])).rowCount > 0 
+        } catch { 
+            return false
+        } finally {
+            client?.release()
+        }
     }
 }
 
