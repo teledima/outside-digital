@@ -7,8 +7,8 @@ const morgan = require('morgan')
 const cors = require('cors')
 
 
-const jwtStrategy =  require('./authentication/jwt_strategy')
-const routes = require('./routes')
+const jwtStrategy =  require('./src/authentication/jwt_strategy')
+const routes = require('./src/routes')
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
