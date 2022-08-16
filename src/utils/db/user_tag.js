@@ -47,12 +47,12 @@ class UserTag {
         let client;
     
         try {
-            client = await pool.connect()
+            client = await this.pool.connect()
             await client.query(
                 'delete from users_tags where tag_id = $1 and user_id = $2 ', 
                 [id, uid]
             )
-        } catch(e) {
+        } catch {
 
         } finally {
             client?.release()
