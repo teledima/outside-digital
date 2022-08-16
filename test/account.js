@@ -5,12 +5,7 @@ const { Pool } = require('pg')
 
 
 const expect = chai.expect
-const pool = new Pool({
-    host: 'localhost',
-    user: 'postgres',
-    password: 'postgres',
-    database: 'postgres'
-})
+const pool = new Pool()
 
 
 chai.use(chaiHttp)
@@ -20,7 +15,7 @@ describe('Account routes', () => {
         pool.connect()
             .then(client => client.query('delete from users'))
             .then(pool.end())
-            .then(done())
+            .finally(_ => { done() })
     })
 
     describe('POST /signup', () => {

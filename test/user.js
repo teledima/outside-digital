@@ -5,12 +5,7 @@ const { Pool } = require('pg')
 
 
 const expect = chai.expect
-const pool = new Pool({
-    host: 'localhost',
-    user: 'postgres',
-    password: 'postgres',
-    database: 'postgres'
-})
+const pool = new Pool()
 
 
 chai.use(chaiHttp)
