@@ -9,7 +9,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v3
         with:
-          node-version:17
+          node-version: 17
       - run: npm ci
       - run: npm test
       - run: echo "🍏 This job's status is ${{ job.status }}."
