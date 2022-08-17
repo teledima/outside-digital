@@ -1,0 +1,15 @@
+name: Deploy app
+on: [push]
+jobs:
+  Set-up-and-test:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version:17
+      - run: npm ci
+      - run: npm test
+      - run: echo "🍏 This job's status is ${{ job.status }}."
