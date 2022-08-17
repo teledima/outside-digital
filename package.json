@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=dev nodemon app.js",
     "prod": "cross-env NODE_ENV=prod node app.js",
-    "test": "cross-env NODE_ENV=test mocha test/user_tag --reporter spec --exit --node-option no-deprecation > test/report.md"
+    "test": "cross-env NODE_ENV=test mocha test/user_tag --reporter spec --exit --node-option no-deprecation"
   },
   "author": "",
   "license": "ISC",
