@@ -36,7 +36,7 @@ const swaggerOptions = {
             }
         }
     },
-    apis: ['./routes/*.js'],
+    apis: ['./src/routes/*.js'],
 }
 const apiSpec = swaggerDocument(swaggerOptions);
 
@@ -56,7 +56,7 @@ if (process.env.NODE_ENV === 'dev') {
 }
 
 app.get('/swagger.json', (_req, res) => res.json(apiSpec));
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(null, { swaggerOptions: { url: '/swagger.json' } }))
+app.use('/doc', swaggerUI.serve, swaggerUI.setup(null, { swaggerOptions: { url: '/swagger.json' } }))
 app.use('/', routes)
 
 app.listen(8080, '0.0.0.0', () => {
