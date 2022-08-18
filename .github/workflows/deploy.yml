@@ -20,8 +20,7 @@ jobs:
     steps:
       - name: Stop service
         run: |
-          docker-compose stop
-          docker-compose rm
+          docker-compose rm --stop --force
           docker rmi outside-digital_backend
       - name: Copy prod env and docker-compose env
         run: |
