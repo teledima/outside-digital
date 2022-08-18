@@ -133,7 +133,7 @@ describe('User routes', () => {
                 .send({email: 'test2@test.ru'})
                 .set('Authorization', `Bearer ${token}`)
                 .end((err, res) => {
-                    expect(res).have.status(401)
+                    expect(res).have.status(400)
                     
                     expect(res.body).be.a('object')
                     expect(res.body).have.all.keys('error', 'user')
