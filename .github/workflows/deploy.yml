@@ -11,8 +11,6 @@ jobs:
         with:
           node-version: 17
       - run: npm ci
-      - name: Copy test env
       - run: cp ~/secrets/.test.env
-      - name: Run tests 
       - run: npm test
       - run: echo "🍏 This job's status is ${{ job.status }}."
