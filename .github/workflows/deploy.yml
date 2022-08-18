@@ -18,5 +18,14 @@ jobs:
     runs-on: self-hosted
     needs: [Set-up-and-test]
     steps:
-      - name: Build images
-        run: echo "Build images"
+      - name: Stop service
+        run: |
+          docker-compose stop
+          docker-compose rm
+          docker rmi outside-digital_backend
+      - name: Copy prod env and docker-compose env
+        run: |
+          cp ~/secrets/.test.env .
+          cp ~/secrets/.docker-compose.env
+      - name: Run service
+        run: docker-compose --env-file .docker-compose.env up -d
