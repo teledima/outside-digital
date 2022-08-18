@@ -25,6 +25,6 @@ jobs:
       - name: Copy prod env and docker-compose env
         run: |
           cp ~/secrets/.test.env .
-          cp ~/secrets/.docker-compose.env
+          cp ~/secrets/.docker-compose.env .
       - name: Run service
         run: docker-compose --env-file .docker-compose.env up -d
