@@ -14,3 +14,9 @@ jobs:
       - run: cp ~/secrets/.test.env .
       - run: npm test
       - run: echo "🍏 This job's status is ${{ job.status }}."
+  Deploy:
+    runs-on: self-hosted
+    needs: [Set-up-and-test]
+    steps:
+      - name: Build images
+        run: echo "Build images"
