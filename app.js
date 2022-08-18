@@ -13,7 +13,7 @@ const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'Digital ocean (test)',
+            title: 'Digital outside (test)',
             version: '1.0.0',
         },
         components: {
@@ -39,7 +39,6 @@ const swaggerOptions = {
     apis: ['./src/routes/*.js'],
 }
 const apiSpec = swaggerDocument(swaggerOptions);
-const port = process.env.NODE_ENV === 'test' ? 8081 : 8080
 
 dotenv.config({
     path: `./.${process.env.NODE_ENV}.env`
@@ -60,8 +59,8 @@ app.get('/swagger.json', (_req, res) => res.json(apiSpec));
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(null, { swaggerOptions: { url: '/swagger.json' } }))
 app.use('/', routes)
 
-app.listen(port, '0.0.0.0', () => {
-    console.log(`listen to http://0.0.0.0:${port}`)
+app.listen(process.env.PORT, '0.0.0.0', () => {
+    console.log(`listen to http://0.0.0.0:${process.env.PORT}`)
 })
 
 module.exports = app
