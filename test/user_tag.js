@@ -133,7 +133,7 @@ describe('User tags routes', () => {
         })
     })
 
-    describe('DELTE /:id', () => {
+    describe('DELETE /:id', () => {
         it('Pass non-number id', (done) => {
             chai.request(app)
                 .delete('/user/tag/1cvsdvs')

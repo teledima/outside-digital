@@ -10,4 +10,8 @@ router.use('/user', user)
 router.use('/tag', tag)
 router.use('/user/tag', userTag)
 
+router.get('/', (req, res) => {
+    res.status(200).send('hello world')
+})
+
 module.exports = router
