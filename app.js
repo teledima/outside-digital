@@ -61,7 +61,7 @@ app.use('/doc', swaggerUI.serve, swaggerUI.setup(null, { swaggerOptions: { url: 
 app.use('/', routes)
 
 app.listen(port, '0.0.0.0', () => {
-    console.log('listen to http://0.0.0.0:8080')
+    console.log(`listen to http://0.0.0.0:${port}`)
 })
 
 module.exports = app
