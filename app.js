@@ -16,6 +16,10 @@ const swaggerOptions = {
             title: 'Digital outside (test)',
             version: '1.0.0',
         },
+        servers: [
+            { url: 'http://localhost:8081', name: 'Development server' },
+            { url: 'http://uwano.ru/api', name: 'Production server' }
+        ],
         components: {
             securitySchemes: {
                 bearerAuth:{
