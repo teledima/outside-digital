@@ -17,20 +17,19 @@ const swaggerOptions = {
             version: '1.0.0',
         },
         components: {
+            securitySchemes: {
+                bearerAuth:{
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT'
+                }
+            },
             schemas: {
-                User: {
-                    type: 'object',
-                    properties: {
-                        email: { type: 'string' },
-                        password: { type: 'string' },
-                        nickname: { type: 'string' }
-                    }
-                },
                 TokenResult: {
                     type: 'object',
                     properties: {
                         token: { type: 'string' },
-                        expire: { type: 'int' }
+                        expire: { type: 'integer' }
                     }
                 }
             }
