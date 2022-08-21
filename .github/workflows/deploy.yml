@@ -28,3 +28,15 @@ jobs:
           cp ~/secrets/.docker-compose.env .
       - name: Run service
         run: docker-compose --env-file .docker-compose.env up -d
+  Test-connect:
+    runs-on: self-hosted
+    needs: [Deploy]
+    steps:
+      - run : |
+          http_code=$(curl -I --silent ${{ secrets.PRODUCTION_SERVER }} | head -n 1 | awk -F ' ' '{print $2}')
+          if [ "$http_code" != "200" ]; then
+              echo "Error occured, status=$http_code"
+              exit 1
+          else
+              echo "Success deploy"
+          fi
