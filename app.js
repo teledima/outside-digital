@@ -35,6 +35,14 @@ const swaggerOptions = {
                         token: { type: 'string' },
                         expire: { type: 'integer' }
                     }
+                },
+                Tag: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'integer' },
+                        name: { type: 'string' },
+                        sortOrder: { type: 'integer' }
+                    }
                 }
             }
         }
