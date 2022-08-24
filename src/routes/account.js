@@ -59,6 +59,7 @@ const router = express.Router()
  *     summary: Login user
  *     tags: [Account]
  *     requestBody:
+ *       required: true
  *       content:
  *         application/json:
  *           schema:

@@ -36,10 +36,21 @@ const swaggerOptions = {
                         expire: { type: 'integer' }
                     }
                 },
-                Tag: {
+                NewTag: {
                     type: 'object',
                     properties: {
                         id: { type: 'integer' },
+                        name: { type: 'string' },
+                        sortOrder: { type: 'integer' }
+                    }
+                },
+                Tag: {
+                    type: 'object',
+                    properties: {
+                        creator: { 
+                            type: 'object', 
+                            properties: { uid: { type: 'string' }, nickname: { type: 'string' } } 
+                        },
                         name: { type: 'string' },
                         sortOrder: { type: 'integer' }
                     }
