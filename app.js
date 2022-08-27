@@ -13,7 +13,7 @@ const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'Digital outside (test)',
+            title: 'Digital outside',
             version: '1.0.0',
         },
         servers: [
